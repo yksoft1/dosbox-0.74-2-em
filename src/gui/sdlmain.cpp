@@ -221,6 +221,10 @@ struct SDL_Block {
 
 static SDL_Block sdl;
 
+#ifdef EMSCRIPTEN
+int emscripten_wait;
+#endif
+
 #define SETMODE_SAVES 1  //Don't set Video Mode if nothing changes.
 #define SETMODE_SAVES_CLEAR 1 //Clear the screen, when the Video Mode is reused
 SDL_Surface* SDL_SetVideoMode_Wrap(int width,int height,int bpp,Bit32u flags){
@@ -1884,6 +1888,13 @@ int main(int argc, char* argv[]) {
 	LOG_MSG("Copyright 2002-2018 DOSBox Team, published under GNU GPL.");
 	LOG_MSG("---");
 
+#ifdef EMSCRIPTEN
+	Section_prop * sdl_dosbox=static_cast<Section_prop *>(control->GetSection("dosbox"));
+	emscripten_wait=sdl_dosbox->Get_int("emscripten_wait");
+	
+	LOG_MSG("Loaded emscripten_wait = %d", emscripten_wait);
+#endif	
+	
 	/* Init SDL */
 #if SDL_VERSION_ATLEAST(1, 2, 14)
 	/* Or debian/ubuntu with older libsdl version as they have done this themselves, but then differently.
@@ -1894,7 +1905,10 @@ int main(int argc, char* argv[]) {
 #endif
 	// Don't init timers, GetTicks seems to work fine and they can use a fair amount of power (Macs again) 
 	// Please report problems with audio and other things.
-	if ( SDL_Init( SDL_INIT_AUDIO|SDL_INIT_VIDEO | /*SDL_INIT_TIMER |*/ SDL_INIT_CDROM
+	if ( SDL_Init( SDL_INIT_AUDIO|SDL_INIT_VIDEO  /*SDL_INIT_TIMER |*/ 
+#ifndef EMSCRIPTEN	
+		|SDL_INIT_CDROM
+#endif
 		|SDL_INIT_NOPARACHUTE
 		) < 0 ) E_Exit("Can't init SDL %s",SDL_GetError());
 	sdl.inited = true;

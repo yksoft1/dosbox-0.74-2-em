@@ -23,6 +23,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#endif
 #include "dosbox.h"
 #include "debug.h"
 #include "cpu.h"
@@ -126,6 +129,11 @@ Bit32u ticksScheduled;
 bool ticksLocked;
 void increaseticks();
 
+#ifdef EMSCRIPTEN
+static int runcount = 0;
+static int CPU_Cycles_FromUsage;
+#endif
+
 static Bitu Normal_Loop(void) {
 	Bits ret;
 	while (1) {
@@ -151,7 +159,11 @@ static Bitu Normal_Loop(void) {
 }
 
 //For trying other delays
+#ifndef EMSCRIPTEN
 #define wrap_delay(a) SDL_Delay(a)
+#else
+#define wrap_delay(a) 
+#endif
 
 void increaseticks() { //Make it return ticksRemain and set it in the function above to remove the global variable.
 	if (GCC_UNLIKELY(ticksLocked)) { // For Fast Forward Mode
@@ -310,7 +322,51 @@ void DOSBOX_SetNormalLoop() {
 	loop=Normal_Loop;
 }
 
+#ifdef EMSCRIPTEN
+/* Many DOS games display a text mode screen after they exit.
+ * This tries to ensure that screen will be visible. In other situations
+ * this is used to display the screen to help diagnosis.
+ */
+extern int emscripten_wait;
+static int em_exitarg;
+static void em_exit_loop(void) {
+	static int counter = 0;
+	if (++counter < 500) {
+		PIC_RunQueue();
+		TIMER_AddTick();
+	} else {
+		emscripten_cancel_main_loop();
+		emscripten_force_exit(em_exitarg);
+	}
+}
+
+void em_exit(int exitarg) {
+	em_exitarg = exitarg;
+	emscripten_cancel_main_loop();
+	emscripten_set_main_loop(em_exit_loop, 100, 1);
+}
+
+static void em_main_loop(void) {
+	if ((*loop)()) {
+		/* Here, the function which called emscripten_set_main_loop() should
+		 * return, but that call stack is gone, so emulation ends.
+		 */
+		LOG_MSG("Emulation ended because program exited.");
+		em_exit(0);
+	}
+}
+#endif
+
 void DOSBOX_RunMachine(void){
+#ifdef EMSCRIPTEN
+	if (runcount < emscripten_wait) {
+		LOG_MSG("emscripten_wait = %d", emscripten_wait);
+		runcount++;		
+	} else if (runcount == emscripten_wait) {
+		runcount++;
+		emscripten_set_main_loop(em_main_loop, 100, 1);
+	}
+#endif
 	Bitu ret;
 	do {
 		ret=(*loop)();
@@ -416,6 +472,13 @@ void DOSBOX_Init(void) {
 
 	Pstring = secprop->Add_path("captures",Property::Changeable::Always,"capture");
 	Pstring->Set_help("Directory where things like wave, midi, screenshot get captured.");
+
+#ifdef EMSCRIPTEN
+	Pint = secprop->Add_int("emscripten_wait",Property::Changeable::Always,1);
+	Pint->SetMinMax(1,10000);
+	Pint->Set_help("How many runs DOSBox waits before creating Emscripten main loop.\n"
+					"For most situations it should not be set above 2.");
+#endif
 
 #if C_DEBUG	
 	LOG_StartUp();
@@ -745,7 +808,9 @@ void DOSBOX_Init(void) {
 	// Mscdex
 	secprop->AddInitFunction(&MSCDEX_Init);
 	secprop->AddInitFunction(&DRIVES_Init);
+#ifndef EMSCRIPTEN	
 	secprop->AddInitFunction(&CDROM_Image_Init);
+#endif
 #if C_IPX
 	secprop=control->AddSection_prop("ipx",&IPX_Init,true);
 	Pbool = secprop->Add_bool("ipx",Property::Changeable::WhenIdle, false);

@@ -2394,8 +2394,10 @@ void MAPPER_StartUp(Section * sec) {
 
 	usescancodes = false;
 
+#ifndef EMSCRIPTEN
 	if (section->Get_bool("usescancodes")) {
 		usescancodes=true;
+
 
 		/* Note: table has to be tested/updated for various OSs */
 #if defined (MACOSX)
@@ -2504,7 +2506,7 @@ void MAPPER_StartUp(Section * sec) {
 			if (key<MAX_SDLKEYS) scancode_map[key]=(Bit8u)i;
 		}
 	}
-
+#endif
 	Prop_path* pp = section->Get_path("mapperfile");
 	mapper.filename = pp->realpath;
 	MAPPER_AddHandler(&MAPPER_Run,MK_f1,MMOD1,"mapper","Mapper");
