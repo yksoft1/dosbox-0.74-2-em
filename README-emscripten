@@ -4,10 +4,10 @@ You must remove your sdl-config if you already built that in MinGW/MSYS environm
 
 My build commands:
 
-CC="emcc --sysroot=c:/emsdk/emscripten/1.38.12/system" CXX="em++ --sysroot=c:/emsdk/emscripten/1.38.12/system" LD="emcc" LD_CXX="em++" CFLAGS="-O2" CXXFLAGS="-O2" ./configure   --host=i386-linux --disable-dynrec --disable-dynamic-x86 --disable-fpu-x86   --with-sdl-prefix=c:/emsdk/emscripten/1.38.12/system --disable-opengl
+CC="emcc --sysroot=c:/emsdk/emscripten/1.38.12/system" CXX="em++ --sysroot=c:/emsdk/emscripten/1.38.12/system" LD="emcc" LD_CXX="em++" CFLAGS="-O3" CXXFLAGS="-O3" ./configure   --host=i386-linux --disable-dynrec --disable-dynamic-x86 --disable-fpu-x86   --with-sdl-prefix=c:/emsdk/emscripten/1.38.12/system --disable-opengl
 chdir src
 mv dosbox dosbox.bc
-emcc -O2 -s USE_SDL=1  -s TOTAL_MEMORY=50331648   dosbox.bc -o tx2.html --preload-file d:/tmpp/db/tx2@/
+emcc -O3 -s USE_SDL=1  -s TOTAL_MEMORY=67108864   dosbox.bc -o tx2.html --preload-file d:/tmpp/db/tx2@/
 
 You could replace TOTAL_MEMORY setting and your game directory with your own. 
 You should place a dosbox.conf with [autoexec] settings that start your game. DOSBox will load it from the virtual / directory.
