@@ -148,9 +148,10 @@ void Value::set_hex(std::string const& in) {
 }
 
 void Value::set_int(string const &in) {
-	istringstream input(in);
+	//istringstream input(in);
 	int result = 0;
-	input >> result;
+	//input >> result;
+	result=atoi(in.c_str()); //try
 	_int = result;
 }
 void Value::set_double(string const &in) {

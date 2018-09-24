@@ -2250,15 +2250,17 @@ public:
 					if (str.find('%')==str.length()-1) {
 						str.erase(str.find('%'));
 						int percval=0;
-						std::istringstream stream(str);
-						stream >> percval;
+						//std::istringstream stream(str);
+						//stream >> percval;
+						percval=atoi(str.c_str());
 						if ((percval>0) && (percval<=105)) CPU_CyclePercUsed=(Bit32s)percval;
 					} else if (str=="limit") {
 						cmdnum++;
 						if (cmd.FindCommand(cmdnum,str)) {
 							int cyclimit=0;
-							std::istringstream stream(str);
-							stream >> cyclimit;
+							//std::istringstream stream(str);
+							//stream >> cyclimit;
+							cyclimit=atoi(str.c_str());
 							if (cyclimit>0) CPU_CycleLimit=cyclimit;
 						}
 					}
@@ -2275,21 +2277,24 @@ public:
 						if (str.find('%')==str.length()-1) {
 							str.erase(str.find('%'));
 							int percval=0;
-							std::istringstream stream(str);
-							stream >> percval;
+							//std::istringstream stream(str);
+							//stream >> percval;
+							percval=atoi(str.c_str());
 							if ((percval>0) && (percval<=105)) CPU_CyclePercUsed=(Bit32s)percval;
 						} else if (str=="limit") {
 							cmdnum++;
 							if (cmd.FindCommand(cmdnum,str)) {
 								int cyclimit=0;
-								std::istringstream stream(str);
-								stream >> cyclimit;
+								//std::istringstream stream(str);
+								//stream >> cyclimit;
+								cyclimit=atoi(str.c_str());
 								if (cyclimit>0) CPU_CycleLimit=cyclimit;
 							}
 						} else {
 							int rmdval=0;
-							std::istringstream stream(str);
-							stream >> rmdval;
+							//std::istringstream stream(str);
+							//stream >> rmdval;
+							rmdval=atoi(str.c_str());
 							if (rmdval>0) {
 								CPU_CycleMax=(Bit32s)rmdval;
 								CPU_OldCycleMax=(Bit32s)rmdval;
@@ -2300,13 +2305,15 @@ public:
 			} else if(type =="fixed") {
 				cmd.FindCommand(1,str);
 				int rmdval=0;
-				std::istringstream stream(str);
-				stream >> rmdval;
+				//std::istringstream stream(str);
+				//stream >> rmdval;
+				rmdval=atoi(str.c_str());
 				CPU_CycleMax=(Bit32s)rmdval;
 			} else {
-				std::istringstream stream(type);
+				//std::istringstream stream(type);
 				int rmdval=0;
-				stream >> rmdval;
+				//stream >> rmdval;
+				rmdval=atoi(type.c_str());
 				if(rmdval) CPU_CycleMax=(Bit32s)rmdval;
 			}
 			CPU_CycleAutoAdjust=false;
