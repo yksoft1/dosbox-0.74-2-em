@@ -131,10 +131,10 @@ bool ticksLocked;
 void increaseticks();
 
 #ifdef EMSCRIPTEN
+int ticksEntry;
 #ifdef EMTERPRETER_SYNC
 int nosleep_lock = 0;
 Bitu last_sleep = 0;
-int ticksEntry;
 #else
 static int runcount = 0;
 #endif
