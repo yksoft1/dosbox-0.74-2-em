@@ -16,6 +16,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#ifdef EMSCRIPTEN
+ // Both Emscripten SDL 1 and 2 use Canvas byte order.
+#define BGR_32BPP
+#endif
+ 
 #if DBPP == 8
 #define PSIZE 1
 #define PTYPE Bit8u
@@ -38,6 +43,7 @@
 //#define FC scalerFrameCache.b16
 #define FC (*(scalerFrameCache_t*)(&scalerSourceCache.b32[400][0])).b16
 #if DBPP == 15
+#ifndef BGR_32BPP
 #define	redMask		0x7C00
 #define	greenMask	0x03E0
 #define	blueMask	0x001F
@@ -47,7 +53,19 @@
 #define redShift	10
 #define greenShift	5
 #define blueShift	0
+#else
+#define	redMask		0x001F
+#define	greenMask	0x03E0
+#define	blueMask	0x7C00
+#define redBits		5
+#define greenBits	5
+#define blueBits	5
+#define redShift	0
+#define greenShift	5
+#define blueShift	10
+#endif
 #elif DBPP == 16
+#ifndef BGR_32BPP
 #define redMask		0xF800
 #define greenMask	0x07E0
 #define blueMask	0x001F
@@ -57,6 +75,17 @@
 #define redShift	11
 #define greenShift	5
 #define blueShift	0
+#else
+#define redMask		0x001F
+#define greenMask	0x07E0
+#define blueMask	0xF800
+#define redBits		5
+#define greenBits	6
+#define blueBits	5
+#define redShift	0
+#define greenShift	5
+#define blueShift	11
+#endif
 #endif
 #elif DBPP == 32
 #define PSIZE 4
@@ -64,15 +93,22 @@
 #define WC scalerWriteCache.b32
 //#define FC scalerFrameCache.b32
 #define FC (*(scalerFrameCache_t*)(&scalerSourceCache.b32[400][0])).b32
-#define redMask		0xff0000
 #define greenMask	0x00ff00
-#define blueMask	0x0000ff
 #define redBits		8
 #define greenBits	8
 #define blueBits	8
-#define redShift	16
 #define greenShift	8
+#ifdef BGR_32BPP
+#define redMask		0x0000ff
+#define blueMask	0xff0000
+#define redShift	0
+#define blueShift	16
+#else
+#define redMask		0xff0000
+#define blueMask	0x0000ff
+#define redShift	16
 #define blueShift	0
+#endif
 #endif
 
 #define redblueMask (redMask | blueMask)
@@ -99,7 +135,11 @@
 #elif DBPP == 16
 #define PMAKE(_VAL) (((_VAL) & 31) | ((_VAL) & ~31) << 1)
 #elif DBPP == 32
+#ifdef BGR_32BPP
+#define PMAKE(_VAL)  (((_VAL&31)<<19)|((_VAL&(31<<5))<<6)|((_VAL&(31<<10))>>7))
+#else
 #define PMAKE(_VAL)  (((_VAL&(31<<10))<<9)|((_VAL&(31<<5))<<6)|((_VAL&31)<<3))
+#endif
 #endif
 #define SRCTYPE Bit16u
 #endif
@@ -111,7 +151,11 @@
 #elif DBPP == 16
 #define PMAKE(_VAL) (_VAL)
 #elif DBPP == 32
+#ifdef BGR_32BPP
+#define PMAKE(_VAL)  (((_VAL&31)<<19)|((_VAL&(63<<5))<<5)|((_VAL&(31<<11))>>8))
+#else
 #define PMAKE(_VAL)  (((_VAL&(31<<11))<<8)|((_VAL&(63<<5))<<5)|((_VAL&31)<<3))
+#endif
 #endif
 #define SRCTYPE Bit16u
 #endif
@@ -123,7 +167,11 @@
 #elif DBPP == 16
 #define PMAKE(_VAL) (PTYPE)(((_VAL&(31<<19))>>8)|((_VAL&(63<<10))>>4)|((_VAL&(31<<3))>>3))
 #elif DBPP == 32
+#ifdef BGR_32BPP
+#define PMAKE(_VAL) (((_VAL&(255<<16))>>16)|(_VAL&(255<<8))|((_VAL&(255<<0))<<16))
+#else
 #define PMAKE(_VAL) (_VAL)
+#endif
 #endif
 #define SRCTYPE Bit32u
 #endif
