@@ -331,8 +331,11 @@ autom4te.cache/*
 *.a
 *.la
 *.deps
-dosbox-x
+dosbox
 Makefile
+config.h
+config.status
+stamp-h1
 
 doxygen
 doxygen/*
