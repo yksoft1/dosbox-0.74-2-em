@@ -159,7 +159,7 @@ void PAGING_PageFault(PhysPt lin_addr,Bitu page_addr,Bitu faultcode) {
 #if C_DEBUG
 //	DEBUG_EnableDebugger();
 #endif
-	DOSBOX_RunMachine();
+	DOSBOX_RunMachineNoSleep();
 	pf_queue.used--;
 	LOG(LOG_PAGING,LOG_NORMAL)("Left PageFault for %x queue %d",lin_addr,pf_queue.used);
 	memcpy(&lflags,&old_lflags,sizeof(LazyFlags));

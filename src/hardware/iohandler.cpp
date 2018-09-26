@@ -299,7 +299,7 @@ void IO_WriteB(Bitu port,Bitu val) {
 		reg_eip = RealOff(icb)+0x08;
 		CPU_Exception(cpu.exception.which,cpu.exception.error);
 
-		DOSBOX_RunMachine();
+		DOSBOX_RunMachineNoSleep();
 		iof_queue.used--;
 
 		reg_al = old_al;
@@ -335,7 +335,7 @@ void IO_WriteW(Bitu port,Bitu val) {
 		reg_eip = RealOff(icb)+0x0a;
 		CPU_Exception(cpu.exception.which,cpu.exception.error);
 
-		DOSBOX_RunMachine();
+		DOSBOX_RunMachineNoSleep();
 		iof_queue.used--;
 
 		reg_ax = old_ax;
@@ -371,7 +371,7 @@ void IO_WriteD(Bitu port,Bitu val) {
 		reg_eip = RealOff(icb)+0x0c;
 		CPU_Exception(cpu.exception.which,cpu.exception.error);
 
-		DOSBOX_RunMachine();
+		DOSBOX_RunMachineNoSleep();
 		iof_queue.used--;
 
 		reg_eax = old_eax;
@@ -402,7 +402,7 @@ Bitu IO_ReadB(Bitu port) {
 		reg_eip = RealOff(icb)+0x00;
 		CPU_Exception(cpu.exception.which,cpu.exception.error);
 
-		DOSBOX_RunMachine();
+		DOSBOX_RunMachineNoSleep();
 		iof_queue.used--;
 
 		retval = reg_al;
@@ -439,7 +439,7 @@ Bitu IO_ReadW(Bitu port) {
 		reg_eip = RealOff(icb)+0x02;
 		CPU_Exception(cpu.exception.which,cpu.exception.error);
 
-		DOSBOX_RunMachine();
+		DOSBOX_RunMachineNoSleep();
 		iof_queue.used--;
 
 		retval = reg_ax;
@@ -475,7 +475,7 @@ Bitu IO_ReadD(Bitu port) {
 		reg_eip = RealOff(icb)+0x04;
 		CPU_Exception(cpu.exception.which,cpu.exception.error);
 
-		DOSBOX_RunMachine();
+		DOSBOX_RunMachineNoSleep();
 		iof_queue.used--;
 
 		retval = reg_eax;

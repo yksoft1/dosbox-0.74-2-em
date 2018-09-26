@@ -225,7 +225,7 @@ struct SDL_Block {
 
 static SDL_Block sdl;
 
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) && !defined(EMTERPRETER_SYNC)
 int emscripten_wait;
 #endif
 
@@ -1908,7 +1908,7 @@ int main(int argc, char* argv[]) {
 	LOG_MSG("Copyright 2002-2018 DOSBox Team, published under GNU GPL.");
 	LOG_MSG("---");
 
-#ifdef EMSCRIPTEN
+#if defined(EMSCRIPTEN) && !defined(EMTERPRETER_SYNC)
 	Section_prop * sdl_dosbox=static_cast<Section_prop *>(control->GetSection("dosbox"));
 	emscripten_wait=sdl_dosbox->Get_int("emscripten_wait");
 	

@@ -13,3 +13,8 @@ You could replace TOTAL_MEMORY setting and your game directory with your own.
 You should place a dosbox.conf with [autoexec] settings that start your game. DOSBox will load it from the virtual / directory.
 DOSBox's interactive DOS shell is not supported.
 
+To build with Emterpretify Async:
+CC="emcc --sysroot=c:/emsdk/emscripten/1.38.12/system" CXX="em++ --sysroot=c:/emsdk/emscripten/1.38.12/system" LD="emcc" LD_CXX="em++" CFLAGS="-O3 -DEMTERPRETER_SYNC" CXXFLAGS="-O3 -DEMTERPRETER_SYNC" ./configure   --host=i386-linux --disable-dynrec --disable-dynamic-x86 --disable-fpu-x86   --with-sdl-prefix=c:/emsdk/emscripten/1.38.12/system --disable-opengl
+chdir src
+mv dosbox dosbox.bc
+emcc -O3 -s USE_SDL=1 -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 -s EMTERPRETIFY_WHITELIST=@em.txt -s TOTAL_MEMORY=67108864   dosbox.bc -o dosbox.html --preload-file d:/tmpp/db/tx2@/
