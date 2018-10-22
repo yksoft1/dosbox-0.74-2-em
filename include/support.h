@@ -23,6 +23,7 @@
 
 #include <string.h>
 #include <string>
+#include <stdlib.h>
 #include <ctype.h>
 #ifndef DOSBOX_DOSBOX_H
 #include "dosbox.h"
