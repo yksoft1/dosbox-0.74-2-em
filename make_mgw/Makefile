@@ -11,14 +11,17 @@ DBX_PATH	= ..
 CXXFLAGS = -O3  -DNDEBUG -std=gnu++98 -Wstrict-overflow=0 -Wstrict-aliasing=0 -fomit-frame-pointer  -mno-ms-bitfields  -I. \
 			-I$(DBX_PATH) \
 			-I$(DBX_PATH)/include \
-			-I$(DBX_PATH)/src 
+			-I$(DBX_PATH)/src \
+			-I$(DBX_PATH)/src/mt32 \
+			-I$(DBX_PATH)/src/mt32/freeverb \
+			-I$(DBX_PATH)/src/sha1
 			
 CXXFLAGS	+=	$(shell sdl-config --cflags)
 
 CFLAGS	=	-O3 -DNDEBUG -Wstrict-overflow=0 -Wstrict-aliasing=0 -fomit-frame-pointer  -mno-ms-bitfields  -I. \
 			-I$(DBX_PATH) \
 			-I$(DBX_PATH)/include \
-			-I$(DBX_PATH)/src \
+			-I$(DBX_PATH)/src 
 			
 CFLAGS	+=	$(shell sdl-config --cflags)
 
@@ -41,7 +44,11 @@ CPPSRCS	=	$(DBX_PATH)/src/dosbox.cpp \
 			$(wildcard $(DBX_PATH)/src/ints/*.cpp) \
 			$(wildcard $(DBX_PATH)/src/libs/gui_tk/*.cpp) \
 			$(wildcard $(DBX_PATH)/src/misc/*.cpp) \
-			$(wildcard $(DBX_PATH)/src/shell/*.cpp) 
+			$(wildcard $(DBX_PATH)/src/shell/*.cpp) \
+			$(wildcard $(DBX_PATH)/src/mt32/*.cpp) \
+			$(wildcard $(DBX_PATH)/src/mt32/freeverb/*.cpp) \
+			$(wildcard $(DBX_PATH)/src/mt32/sha1/*.cpp)
+			
 
 OBJS = $(addsuffix .o,$(basename $(CPPSRCS)))
 LIBS = -static -lz -lpng -lm -lstdc++ $(shell sdl-config --libs)

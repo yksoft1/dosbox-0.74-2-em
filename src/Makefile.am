@@ -1,6 +1,6 @@
 AM_CPPFLAGS = -I$(top_srcdir)/include
 
-SUBDIRS = cpu debug dos fpu gui hardware libs ints misc shell platform 
+SUBDIRS = cpu debug dos fpu gui hardware libs ints misc shell platform mt32
 
 bin_PROGRAMS = dosbox
 
@@ -18,4 +18,7 @@ dosbox_LDADD = cpu/libcpu.a debug/libdebug.a dos/libdos.a fpu/libfpu.a  hardware
 
 EXTRA_DIST = winres.rc dosbox.ico
 
+if C_MT32
+dosbox_LDADD += mt32/libmt32.a
+endif
 

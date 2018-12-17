@@ -87,6 +87,8 @@
 /* Define to 1 to enable screenshots, requires libpng */
 #define C_SSHOT 1 
 
+#define C_MT32 1 
+
 /* The type of cpu this target has */
 #define C_TARGETCPU X86
 

@@ -196,6 +196,19 @@ if test x$alsa_midi = xtrue ; then
   CXXFLAGS="$CXXFLAGS $ALSA_CFLAGS"
 fi
 
+#FEATURE: MT32 (MUNT) emulation
+AH_TEMPLATE(C_MT32,[Define to 1 to enable MT32 emulation (Not for Emscripten SDL1)])
+AC_ARG_ENABLE(mt32,AC_HELP_STRING([--enable-mt32],[Enable MT32 emulation]),,enable_mt32=no)
+AC_MSG_CHECKING(whether MT32 emulation will be enabled)
+if test x$enable_mt32 = xyes ; then 
+  AC_MSG_RESULT(yes)
+  AC_DEFINE(C_MT32,1)
+else
+  enable_mt32=no
+  AC_MSG_RESULT(no)
+fi 
+AM_CONDITIONAL(C_MT32, test "x$enable_mt32" == "xyes")
+
 #Check for big endian machine, should #define WORDS_BIGENDIAN if so
 AC_C_BIGENDIAN
 
@@ -568,6 +581,7 @@ src/misc/Makefile
 src/shell/Makefile
 src/platform/Makefile
 src/platform/visualc/Makefile
+src/mt32/Makefile
 visualc_net/Makefile
 include/Makefile
 docs/Makefile
