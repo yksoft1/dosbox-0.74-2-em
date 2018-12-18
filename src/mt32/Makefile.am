@@ -6,14 +6,15 @@ libmt32_a_SOURCES =
 if C_MT32
 noinst_LIBRARIES += libmt32.a
 libmt32_a_SOURCES += \
-	Analog.cpp Analog.h File.cpp File.h Enumerations.h  \
-	AReverbModel.cpp AReverbModel.h BReverbModel.cpp BReverbModel.h \
+	Analog.cpp Analog.h \
+	File.cpp File.h \
+	BReverbModel.cpp BReverbModel.h \
 	mt32emu.h Part.cpp Part.h Partial.cpp Partial.h PartialManager.cpp \
 	mmath.h PartialManager.h Poly.cpp Poly.h Structures.h Synth.cpp FileStream.cpp FileStream.h \
 	Synth.h Tables.cpp Tables.h TVA.cpp TVA.h TVF.cpp TVF.h TVP.cpp \
-	LA32Ramp.cpp LA32Ramp.h TVP.h  LA32FloatWaveGenerator.cpp LA32FloatWaveGenerator.h \
-	LA32WaveGenerator.cpp LA32WaveGenerator.h LegacyWaveGenerator.cpp LegacyWaveGenerator.h \
-	ROMInfo.cpp ROMInfo.h MidiStreamParser.cpp MidiStreamParser.h MidiEventQueue.h \
-	SampleRateConverter.cpp SampleRateConverter.h \
-	./sha1/sha1.cpp ./sha1/sha1.h 
+	LA32Ramp.cpp LA32Ramp.h TVP.h AReverbModel.cpp AReverbModel.h \
+	LA32WaveGenerator.cpp LA32WaveGenerator.h LA32FloatWaveGenerator.cpp LA32FloatWaveGenerator.h LegacyWaveGenerator.cpp LegacyWaveGenerator.h \
+	ROMInfo.cpp ROMInfo.h \
+	./sha1/sha1.cpp ./sha1/sha1.h
 endif
+
