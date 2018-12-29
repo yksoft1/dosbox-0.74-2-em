@@ -79,9 +79,9 @@ clean:
 html: $(TARGET)
 ifeq ($(PRELOAD), 1)
 	$(CC) -O3 $(SDL_CFLAGS) -s WASM=$(WASM) -s TOTAL_MEMORY=$(EMSCRIPTEN_TOTAL_MEMORY)  -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 \
-	-s EMTERPRETIFY_WHITELIST=@$(DBX_PATH)/src/em.txt $(TARGET) \
+	-s EMTERPRETIFY_WHITELIST=@$(DBX_PATH)/src/em.txt $(TARGET) -s ERROR_ON_UNDEFINED_SYMBOLS=0 \
 	--preload-file $(PREFILE) -o $(basename $(TARGET)).html 
 else
 	$(CC) -O3 $(SDL_CFLAGS) -s WASM=$(WASM) -s TOTAL_MEMORY=$(EMSCRIPTEN_TOTAL_MEMORY)  -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 \
-	-s EMTERPRETIFY_WHITELIST=@$(DBX_PATH)/src/em.txt --profiling-funcs $(TARGET) -o $(basename $(TARGET)).html 
+	-s EMTERPRETIFY_WHITELIST=@$(DBX_PATH)/src/em.txt --profiling-funcs $(TARGET) -s ERROR_ON_UNDEFINED_SYMBOLS=0 -o $(basename $(TARGET)).html 
 endif

@@ -79,9 +79,9 @@ clean:
 html: $(TARGET)
 ifeq ($(PRELOAD), 1)
 	$(CC) -O3 $(SDL_CFLAGS) -s WASM=$(WASM) -s TOTAL_MEMORY=$(EMSCRIPTEN_TOTAL_MEMORY)  \
-	$(TARGET) \
+	$(TARGET) -s ERROR_ON_UNDEFINED_SYMBOLS=0 \
 	--preload-file $(PREFILE) -o $(basename $(TARGET)).html 
 else
 	$(CC) -O3 $(SDL_CFLAGS) -s WASM=$(WASM) -s TOTAL_MEMORY=$(EMSCRIPTEN_TOTAL_MEMORY)  \
-	$(TARGET) -o $(basename $(TARGET)).html 
+	$(TARGET) -s ERROR_ON_UNDEFINED_SYMBOLS=0 -o $(basename $(TARGET)).html 
 endif
