@@ -56,8 +56,21 @@ CPPSRCS	=	$(DBX_PATH)/src/dosbox.cpp \
 			$(wildcard $(DBX_PATH)/src/misc/*.cpp) \
 			$(wildcard $(DBX_PATH)/src/shell/*.cpp) 
 
+CPPSRCS_MT32 = $(wildcard $(DBX_PATH)/src/mt32/*.cpp) \
+			$(wildcard $(DBX_PATH)/src/mt32/sha1/*.cpp)
+
+OBJS_MT32 = $(addsuffix .o,$(basename $(CPPSRCS_MT32)))
+
+CXXFLAGS_MT32 = -DC_MT32=1 -I$(DBX_PATH)/src/mt32 -I$(DBX_PATH)/src/mt32/sha1
+
 OBJS = $(addsuffix .o,$(basename $(CPPSRCS)))
 LIBS = -lm  $(SDL_LIBS) 
+
+ifeq ($(MT32),1)
+	CPPSRCS += $(CPPSRCS_MT32)
+	CXXFLAGS += $(CXXFLAGS_MT32)
+	OBJS += $(OBJS_MT32)
+endif
 
 .SUFFIXES: .c.o
 .SUFFIXES: .cpp.o
@@ -74,14 +87,14 @@ $(TARGET):	$(OBJS)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(TARGET) $(OBJS)
+	rm -f $(TARGET) $(OBJS) $(OBJS_MT32) $(basename $(TARGET)).html $(basename $(TARGET)).js.orig.js  $(basename $(TARGET)).js $(basename $(TARGET)).wasm $(basename $(TARGET)).data
 
 html: $(TARGET)
 ifeq ($(PRELOAD), 1)
 	$(CC) -O3 $(SDL_CFLAGS) -s WASM=$(WASM) -s TOTAL_MEMORY=$(EMSCRIPTEN_TOTAL_MEMORY)  -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 \
-	-s EMTERPRETIFY_WHITELIST=@$(DBX_PATH)/src/em.txt $(TARGET) \
+	-s EMTERPRETIFY_WHITELIST=@$(DBX_PATH)/src/em.txt -s BINARYEN_TRAP_MODE="js" -s ERROR_ON_UNDEFINED_SYMBOLS=0 $(TARGET) \
 	--preload-file $(PREFILE) -o $(basename $(TARGET)).html 
 else
 	$(CC) -O3 $(SDL_CFLAGS) -s WASM=$(WASM) -s TOTAL_MEMORY=$(EMSCRIPTEN_TOTAL_MEMORY)  -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 \
-	-s EMTERPRETIFY_WHITELIST=@$(DBX_PATH)/src/em.txt --profiling-funcs $(TARGET) -o $(basename $(TARGET)).html 
+	-s EMTERPRETIFY_WHITELIST=@$(DBX_PATH)/src/em.txt -s BINARYEN_TRAP_MODE="js" -s ERROR_ON_UNDEFINED_SYMBOLS=0 $(TARGET) -o $(basename $(TARGET)).html 
 endif
