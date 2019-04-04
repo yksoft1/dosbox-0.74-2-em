@@ -794,9 +794,9 @@ void DOSBOX_Init(void) {
 	Pint->Set_values(mt32reverbLevels);
 	Pint->Set_help("MT-32 reverb level");
 
-	/*Pint = secprop->Add_int("mt32.partials",Property::Changeable::WhenIdle,32);
+	Pint = secprop->Add_int("mt32.partials",Property::Changeable::WhenIdle,32);
 	Pint->SetMinMax(0,256);
-	Pint->Set_help("MT-32 max partials allowed (0-256)");*/
+	Pint->Set_help("MT-32 max partials allowed (0-256)");
 	
 #if C_DEBUG
 	secprop=control->AddSection_prop("debug",&DEBUG_Init);
